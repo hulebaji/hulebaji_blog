@@ -65,7 +65,7 @@ var meuicat = {
 			setTimeout(meuicat.runtime, 1e3);
 	}, // about 运行时间
 	fiftyonela: function() {
-		fetch('https://v6-widget.51.la/v6/KKDiP3d0QcFRyp3T/quote.js?theme=0&f=12')
+		fetch('https://v6-widget.51.la/v6/KKDiP3d0QcFRyp3T/quote.js')
 			.then(res => res.text())
 			.then((data) => {
 				let title = ['今日人数', '今日访问', '昨日人数', '昨日访问', '本月访问']
