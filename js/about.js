@@ -13,7 +13,7 @@ var meuicat = {
 		.then(articleData => {
 			const urls = Object.keys(articleData);
 		
-			fetch('https://twikoo.hulebaji.me/', {
+		fetch('{https://twikoo.hulebaji.me/}', {
 			method: "POST",
 			body: JSON.stringify({ event: "GET_RECENT_COMMENTS", accessToken: "{YOUR_TOKEN}", includeReply: true, pageSize: -1 }),
 			headers: { 'Content-Type': 'application/json' }
