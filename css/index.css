@@ -3715,7 +3715,10 @@ span.tags-punctuation::before {
   z-index: -1;
 }
 #footer div#st-footer-bar {
-  display: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 16px;
 }
 #footer div#st-footer-bar a.footer-bar-link {
   padding: 4px 16px;
@@ -3740,12 +3743,6 @@ span.tags-punctuation::before {
   font-weight: 700;
   padding: 0 0.5rem;
   text-align: center;
-}
-.post #footer div#st-footer-bar {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 16px;
 }
 #footer #footer_deal {
   justify-content: center;
@@ -6166,6 +6163,22 @@ span.tags-punctuation {
   background: var(--efu-theme);
   color: var(--efu-white);
 }
+.category-bar-next {
+  margin-left: 8px;
+  cursor: pointer;
+  height: 30px;
+  width: 30px;
+  display: flex;
+  border-radius: 8px;
+  align-items: center;
+  justify-content: center;
+  transition: 0.3s;
+}
+@media (hover: hover) {
+  .category-bar-next:hover {
+    color: var(--efu-lighttext);
+  }
+}
 #category #category-bar {
   padding: 0;
   border: none;
@@ -6904,12 +6917,7 @@ body[data-type=music] #nav-music {
 }
 #Music-page .aplayer-body {
   width: 70%;
-  height: 85vh;
-}
-@media screen and (max-width: 1200px) {
-  #Music-page .aplayer-body {
-    height: 80vh;
-  }
+  height: 75vh;
 }
 @media screen and (max-width: 798px) {
   #Music-page .aplayer-body {
@@ -6921,23 +6929,11 @@ body[data-type=music] #nav-music {
     left: 0;
     right: 0;
     top: 0;
-    height: 75vh;
+    height: calc(var(--vh) - 230px);
   }
 }
 #Music-page ol {
-  max-height: 85vh !important;
-}
-@media screen and (max-width: 1200px) {
-  #Music-page ol {
-    max-height: 80vh !important;
-  }
-}
-@media screen and (max-width: 798px) {
-  #Music-page ol {
-    max-height: 100% !important;
-    padding-right: 3px;
-    padding-left: 8px;
-  }
+  max-height: calc(var(--vh) - 170px) !important;
 }
 #Music-page ol > li {
   font-size: 14px;
@@ -7019,7 +7015,6 @@ body[data-type=music] #nav-music {
 @media screen and (max-width: 798px) {
   #Music-page ol > li span.aplayer-list-title {
     max-width: 55%;
-    width: auto;
     display: -webkit-box;
     -webkit-line-clamp: 1;
     overflow: hidden;
@@ -7080,7 +7075,7 @@ body[data-type=music] #nav-music {
   #Music-page .aplayer-info .aplayer-music {
     display: flex;
     position: fixed;
-    top: 83vh;
+    top: calc(var(--vh) - 178px);
     left: 0;
     margin: 0;
     margin-left: 32px;
@@ -7119,16 +7114,7 @@ body[data-type=music] #nav-music {
 }
 #Music-page .aplayer-info .aplayer-lrc {
   padding-top: 24%;
-  height: 100vh;
-}
-@media screen and (max-width: 798px) {
-  #Music-page .aplayer-info .aplayer-lrc {
-    margin-top: 0;
-    height: auto;
-    min-height: 100%;
-    mask-image: linear-gradient(to bottom, #000, #000, #000, #000, rgba(0,0,0,0), rgba(0,0,0,0));
-    padding-top: 100px;
-  }
+  height: var(--vh);
 }
 #Music-page .aplayer-info .aplayer-lrc:hover p {
   filter: blur(0px);
@@ -7140,7 +7126,7 @@ body[data-type=music] #nav-music {
   margin-bottom: 36px !important;
   color: #fff;
   font-weight: bold;
-  text-align: center;
+  text-align: left;
   filter: blur(2px);
   opacity: 0.3;
   transition: all 0.9s cubic-bezier(0.56, 0.17, 0.22, 0.76);
@@ -7323,7 +7309,7 @@ body[data-type=music] #nav-music {
     position: fixed;
     z-index: 1002;
     width: 100%;
-    bottom: 0px;
+    bottom: 0;
     left: 0;
     background: var(--efu-white);
     border-radius: 16px 16px 0 0;
@@ -11780,6 +11766,9 @@ div.videos[col='4'] iframe {
 .mermaid {
   display: flex;
   justify-content: center;
+}
+.mermaid text {
+  fill: var(--efu-fontcolor) !important;
 }
 .note {
   position: relative;
