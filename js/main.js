@@ -163,7 +163,7 @@ let is_rm = typeof rm !== 'undefined'
 /**
  * sco
  * @description solitude 主题的一些方法
- * @type {{showConsole: (function(): boolean), setTimeState: sco.setTimeState, toTop: (function(): void), changeTimeFormat(*): void, hideCookie: sco.hideCookie, owoBig(*): void, switchDarkMode: sco.switchDarkMode, openAllTags: sco.openAllTags, switchHideAside: sco.switchHideAside, addRuntime: sco.addRuntime, refreshWaterFall: sco.refreshWaterFall, categoriesBarActive: sco.categoriesBarActive, addNavBackgroundInit: sco.addNavBackgroundInit, toPage: sco.toPage, changeSayHelloText: sco.changeSayHelloText, initConsoleState: (function(): void), switchComments(): void, switchKeyboard: sco.switchKeyboard, initAdjust: sco.initAdjust, listenToPageInputPress: sco.listenToPageInputPress, scrollTo: sco.scrollTo, musicToggle: sco.musicToggle, toTalk: sco.toTalk, switchCommentBarrage: sco.switchCommentBarrage, hideTodayCard: (function(): void), scrollCategoryBarToRight: sco.scrollCategoryBarToRight, scrollToComment: sco.scrollToComment, initbbtalk: sco.initbbtalk, tagPageActive: sco.tagPageActive, hideConsole: (function(): void), addPhotoFigcaption: sco.addPhotoFigcaption}}
+ * @type {{showConsole: (function(): boolean), setTimeState: sco.setTimeState, toTop: (function(): void), changeTimeFormat(*): void, hideCookie: sco.hideCookie, owoBig(*): void, switchDarkMode: sco.switchDarkMode, openAllTags: sco.openAllTags, switchHideAside: sco.switchHideAside, addRuntime: sco.addRuntime, refreshWaterFall: sco.refreshWaterFall, categoriesBarActive: sco.categoriesBarActive, addNavBackgroundInit: sco.addNavBackgroundInit, toPage: sco.toPage, changeSayHelloText: sco.changeSayHelloText, initConsoleState: (function(): void), switchComments(): void, switchKeyboard: sco.switchKeyboard, listenToPageInputPress: sco.listenToPageInputPress, scrollTo: sco.scrollTo, musicToggle: sco.musicToggle, toTalk: sco.toTalk, switchCommentBarrage: sco.switchCommentBarrage, hideTodayCard: (function(): void), scrollCategoryBarToRight: sco.scrollCategoryBarToRight, scrollToComment: sco.scrollToComment, initbbtalk: sco.initbbtalk, tagPageActive: sco.tagPageActive, hideConsole: (function(): void), addPhotoFigcaption: sco.addPhotoFigcaption}}
  */
 let sco = {
     /**
@@ -313,7 +313,9 @@ let sco = {
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    waterfall(entry.target) || entry.target.classList.add('show');
+                    setTimeout(() => {
+                        waterfall(entry.target) || entry.target.classList.add('show');
+                    }, 300);
                 }
             });
         });
@@ -368,7 +370,7 @@ let sco = {
      * @description 添加图片标题
      */
     addPhotoFigcaption: function () {
-        document.querySelectorAll('#article-container img').forEach(image => {
+        document.querySelectorAll('#article-container img:not(.gallery-item img)').forEach(image => {
             const captionText = image.getAttribute('alt');
             captionText && image.insertAdjacentHTML('afterend', `<div class="img-alt is-center">${captionText}</div>`);
         });
@@ -474,12 +476,16 @@ let sco = {
      * @description 监听页码输入
      */
     listenToPageInputPress: function () {
+        const toGroup = document.querySelector(".toPageGroup")
         const pageText = document.getElementById("toPageText");
         if (!pageText) return;
         const pageButton = document.getElementById("toPageButton");
         const pageNumbers = document.querySelectorAll(".page-number");
         const lastPageNumber = +pageNumbers[pageNumbers.length - 1].textContent;
-        if (!pageText || lastPageNumber === 1) return;
+        if (!pageText || lastPageNumber === 1) {
+            toGroup.style.display = "none";
+            return
+        }
         pageText.addEventListener("keydown", (event) => {
             if (event.keyCode === 13) {
                 sco.toPage();
@@ -500,28 +506,6 @@ let sco = {
     addNavBackgroundInit: function () {
         const scrollTop = document.documentElement.scrollTop;
         (scrollTop !== 0) && document.getElementById("page-header").classList.add("nav-fixed", "nav-visible");
-        const cookiesWindow = document.getElementById("cookies-window");
-        cookiesWindow && (cookiesWindow.style.display = 'none')
-    },
-    /**
-     * initAdjust
-     * @description 初始化调整
-     */
-    initAdjust: function () {
-        const $blogName = document.getElementById('site-name');
-        const $menusEle = document.querySelector('#menus .menus_items');
-        const $searchEle = document.querySelector('#search-button');
-        const $nav = document.getElementById('nav');
-        const blogNameWidth = $blogName && $blogName.offsetWidth;
-        const menusWidth = $menusEle && $menusEle.offsetWidth;
-        const searchWidth = $searchEle && $searchEle.offsetWidth;
-        const shouldHideMenu = window.innerWidth < 768 || blogNameWidth + menusWidth + searchWidth > $nav?.offsetWidth - 120;
-        if (shouldHideMenu) {
-            $nav?.classList.add('hide-menu');
-        } else {
-            $nav?.classList.remove('hide-menu');
-        }
-        $nav?.classList.add('show');
     },
     /**
      * toPage
@@ -797,7 +781,7 @@ class tabs {
 window.refreshFn = () => {
     const {is_home, is_page, page, is_post} = PAGE_CONFIG;
     const {runtime, lazyload, lightbox, randomlink, covercolor, post_ai} = GLOBAL_CONFIG;
-    const timeSelector = is_home || is_page ? '#recent-posts time, .webinfo-item time' : '#post-meta time';
+    const timeSelector = (is_home ? '.post-meta-date time' : is_post ? '.post-meta-date time' : '.datatime') + ', .webinfo-item time';
     document.body.setAttribute('data-type', page);
     sco.changeTimeFormat(document.querySelectorAll(timeSelector));
     runtime && sco.addRuntime();
@@ -818,7 +802,7 @@ window.refreshFn = () => {
 }
 // 页面加载完成后执行
 document.addEventListener('DOMContentLoaded', () => {
-    [sco.initAdjust, addCopyright, sco.initConsoleState, window.refreshFn, asideStatus, () => window.onscroll = percent].forEach(fn => fn());
+    [addCopyright, sco.initConsoleState, window.refreshFn, asideStatus, () => window.onscroll = percent].forEach(fn => fn());
 });
 // 一些快捷键绑定
 window.onkeydown = e => {
