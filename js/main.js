@@ -155,6 +155,8 @@ const handleThemeChange = mode => {
 
 // lastSayHello 上次打招呼的内容
 let lastSayHello = "";
+// 用于记录标签页是否被隐藏，从而改变下次执行打招呼的内容
+let wasPageHidden = false;
 // musicPlaying 是否正在播放音乐
 let musicPlaying = false
 // is_rm 是否启用右键菜单
@@ -327,7 +329,7 @@ let sco = {
      */
     addRuntime: function () {
         let el = document.getElementById('runtimeshow')
-        el && GLOBAL_CONFIG.runtime && (el.innerText = utils.timeDiff(new Date(GLOBAL_CONFIG.runtime), new Date()) + GLOBAL_CONFIG.lang.time.day)
+        el && GLOBAL_CONFIG.runtime && (el.innerText = utils.timeDiff(new Date(GLOBAL_CONFIG.runtime), new Date()) + GLOBAL_CONFIG.lang.day)
     },
     /**
      * toTalk
@@ -391,12 +393,34 @@ let sco = {
         if (el) {
             const hours = new Date().getHours();
             const lang = GLOBAL_CONFIG.aside.sayhello;
+
+            const localData = getLocalData(['twikoo', 'WALINE_USER_META', 'WALINE_USER', '_v_Cache_Meta', 'ArtalkUser']);
+
+            function getLocalData(keys) {
+                for (let key of keys) {
+                    const data = localStorage.getItem(key);
+                    if (data) {
+                        return JSON.parse(data);
+                    }
+                }
+                return null;
+            };
+            const nick = localData ? (localData.nick ? localData.nick : localData.display_name) : null;
+
+            let prefix;
+            if (wasPageHidden) {
+                prefix = GLOBAL_CONFIG.aside.sayhello3.back + nick;
+                wasPageHidden = false;
+            } else {
+                prefix = GLOBAL_CONFIG.aside.sayhello3.prefix + nick;
+            }
+
             const greetings = [
-                {start: 0, end: 5, text: lang.goodnight},
-                {start: 6, end: 10, text: lang.morning},
-                {start: 11, end: 14, text: lang.noon},
-                {start: 15, end: 18, text: lang.afternoon},
-                {start: 19, end: 24, text: lang.night},
+                {start: 0, end: 5, text: nick ? prefix : lang.goodnight},
+                {start: 6, end: 10, text: nick ? prefix : lang.morning},
+                {start: 11, end: 14, text: nick ? prefix : lang.noon},
+                {start: 15, end: 18, text: nick ? prefix : lang.afternoon},
+                {start: 19, end: 24, text: nick ? prefix : lang.night},
             ];
             const greeting = greetings.find(g => hours >= g.start && hours <= g.end);
             el.innerText = greeting.text;
@@ -751,17 +775,20 @@ class tabs {
     }
 
     static clickFnOfTabs() {
-        document.querySelectorAll('#article-container .tab > button').forEach(item => {
-            item.addEventListener('click', e => {
-                const $tabItem = e.target.parentNode
+        document.querySelectorAll('#article-container .tab > button').forEach(function (item) {
+            item.addEventListener('click', function (e) {
+                const that = this
+                const $tabItem = that.parentNode
                 if (!$tabItem.classList.contains('active')) {
                     const $tabContent = $tabItem.parentNode.nextElementSibling
-                    const $siblings = $tabItem.parentNode.querySelector('.active')
+                    const $siblings = utils.siblings($tabItem, '.active')[0]
                     $siblings && $siblings.classList.remove('active')
                     $tabItem.classList.add('active')
-                    const tabId = e.target.getAttribute('data-href').replace('#', '')
-                    Array.from($tabContent.children).forEach(item => {
-                        item.id === tabId ? item.classList.add('active') : item.classList.remove('active')
+                    const tabId = that.getAttribute('data-href').replace('#', '')
+                    const childList = [...$tabContent.children]
+                    childList.forEach(item => {
+                        if (item.id === tabId) item.classList.add('active')
+                        else item.classList.remove('active')
                     })
                 }
             })
@@ -769,14 +796,14 @@ class tabs {
     }
 
     static backToTop() {
-        document.querySelectorAll('#article-container .tabs .tab-to-top').forEach(item => {
-            item.addEventListener('click', () => {
-                utils.scrollToDest(utils.getEleTop(item.closest('.tabs')), 300)
+        document.querySelectorAll('#article-container .tabs .tab-to-top').forEach(function (item) {
+            item.addEventListener('click', function () {
+                utils.scrollToDest(utils.getEleTop(item.parentElement.parentElement.parentNode), 300)
+
             })
         })
     }
 }
-
 // 页面刷新
 window.refreshFn = () => {
     const {is_home, is_page, page, is_post} = PAGE_CONFIG;
@@ -803,6 +830,12 @@ window.refreshFn = () => {
 // 页面加载完成后执行
 document.addEventListener('DOMContentLoaded', () => {
     [addCopyright, sco.initConsoleState, window.refreshFn, asideStatus, () => window.onscroll = percent].forEach(fn => fn());
+});
+// 监听切换标签页
+document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+        wasPageHidden = true;
+    }
 });
 // 一些快捷键绑定
 window.onkeydown = e => {

@@ -2088,6 +2088,13 @@ span.tags-punctuation::before {
   font-size: 14px;
   line-height: 32px;
 }
+.memorial {
+  -webkit-filter: grayscale(100%);
+  -moz-filter: grayscale(100%);
+  -ms-filter: grayscale(100%);
+  -o-filter: grayscale(100%);
+  filter: grayscale(100%);
+}
 #article-container {
   overflow-wrap: break-word;
 }
@@ -2434,7 +2441,7 @@ span.tags-punctuation::before {
   position: relative;
   overflow: hidden;
   margin-top: 0.5rem;
-  padding: 1rem 1.2rem;
+  padding: 0.5rem 0.7rem;
 }
 #aside-content .card-widget:hover {
   box-shadow: var(--efu-shadow-border);
@@ -3903,6 +3910,9 @@ span.tags-punctuation::before {
   padding: 0 8px;
   margin: 0 4px;
 }
+#footer-bar .footer-bar-left .copyright .footer-bar-link {
+  margin: 0;
+}
 #footer-bar .footer-bar-link {
   margin: 0 4px;
   color: var(--efu-fontcolor);
@@ -3994,7 +4004,6 @@ span.tags-punctuation::before {
   background: 0 center;
 }
 #page-header.not-top-img #nav {
-  z-index: 998;
   transition: 0.3s;
   background: var(--efu-card-bg);
 }
@@ -4180,7 +4189,6 @@ span.tags-punctuation::before {
 #page-header.nav-fixed #nav {
   position: fixed;
   top: 0;
-  z-index: 103;
   transition: 0.3s;
   box-shadow: none;
   background: var(--efu-card-bg);
@@ -4285,7 +4293,7 @@ span.tags-punctuation::before {
   padding: 0;
   position: absolute;
   top: 0;
-  z-index: 90;
+  z-index: 10;
   display: flex;
   flex-wrap: wrap;
   -webkit-box-align: center;
@@ -4307,7 +4315,6 @@ span.tags-punctuation::before {
   top: 0;
   transition: 0.2s;
   position: fixed;
-  z-index: 91;
   opacity: 1;
   filter: none;
 }
@@ -4891,7 +4898,7 @@ span.tags-punctuation {
   color: var(--efu-gray);
   font-size: 14px;
   position: absolute;
-  bottom: 2rem;
+  bottom: 1rem;
   left: 2rem;
 }
 @media screen and (max-width: 768px) {
@@ -4902,6 +4909,7 @@ span.tags-punctuation {
 .post-tips a {
   color: var(--efu-gray);
   border: none;
+  margin-left: 4px;
 }
 .post-tips a:hover {
   color: var(--efu-main);
@@ -5752,6 +5760,9 @@ span.tags-punctuation {
   .topGroup {
     overflow-x: auto;
   }
+  .topGroup::-webkit-scrollbar {
+    display: none;
+  }
 }
 @media screen and (min-width: 1201px) {
   .topGroup {
@@ -6490,7 +6501,9 @@ i.bber-gotobb {
 #bber .bber-info .fa-rectangles-mixed {
   margin-right: 8px;
 }
-#bber .bber-info .bber-info-time {
+#bber .bber-info .bber-info-time,
+#bber .bber-info .bber-info-location {
+  margin-right: 0.5rem;
   color: var(--efu-fontcolor);
   font-size: 0.7rem;
   background-color: var(--efu-gray-op);
@@ -6500,22 +6513,25 @@ i.bber-gotobb {
   display: flex;
   align-items: center;
 }
-#bber .bber-info .bber-info-time i {
+#bber .bber-info .bber-info-time i,
+#bber .bber-info .bber-info-location i {
   margin-right: 8px;
   font-size: 16px;
 }
-#bber .bber-info .bber-info-time .datafrom {
+#bber .bber-info .bber-info-time .datafrom,
+#bber .bber-info .bber-info-location .datafrom {
   order: 2;
   color: var(--efu-secondtext);
   font-size: 0.7rem;
   margin-left: 8px;
 }
-#bber .bber-info .bber-info-time .datafrom small {
+#bber .bber-info .bber-info-time .datafrom small,
+#bber .bber-info .bber-info-location .datafrom small {
   font-size: 0.7rem;
 }
 #bber .bber-info .bber-content-link {
   display: flex;
-  margin-left: 0.5rem;
+  margin-right: 0.5rem;
   color: var(--efu-secondtext);
   font-size: 0.7rem;
   align-items: center;
@@ -8081,7 +8097,7 @@ body[data-type=music] #nav-music {
   transition: 0.3s;
 }
 #about-page .author-content-item.skills .tags-group-wrapper {
-  margin-top: 20px;
+  margin-top: 40px;
   display: flex;
   flex-wrap: nowrap;
   animation: rowleft 60s linear infinite;
@@ -8484,7 +8500,7 @@ body[data-type=music] #nav-music {
   justify-content: space-between;
   flex-direction: row;
   flex-wrap: wrap;
-  margin-top: 1rem;
+  margin-top: 4px;
   margin-bottom: 2rem;
 }
 #about-page .about-statistic #statistic div {
@@ -8768,12 +8784,6 @@ div#banners .bannerText {
   font-weight: 700;
   box-shadow: var(--efu-shadow-blackdeep);
 }
-@media screen and (max-width: 768px) {
-  #page .tags-group-icon {
-    width: 50px;
-    height: 50px;
-  }
-}
 .tags-group-icon:nth-child(even) {
   margin-top: 1rem;
   transform: translate(-60px);
@@ -8869,7 +8879,7 @@ div#banners .bannerText {
 }
 .author-content-item .card-content .banner-button-group {
   position: absolute;
-  bottom: 1.5rem;
+  bottom: 1rem;
   right: 2rem;
 }
 .author-content-item .card-content .banner-button-group .banner-button {
