@@ -33,12 +33,17 @@
   opacity: 0;
   transition: 0.3s;
 }
+#post_chat_button {
+  display: none;
+maxWidth768()
+}
 #postChat_iframeContainer {
   z-index: 1000;
   border: var(--style-border-always);
   background: var(--efu-card-bg);
   animation: to_show_fromLeftBottom 0.2s ease-out;
   border-radius: 12px;
+maxWidth768()
 }
 #efuTalk.on span.efuTalkTitle,
 #efuTalk:hover span.efuTalkTitle {
